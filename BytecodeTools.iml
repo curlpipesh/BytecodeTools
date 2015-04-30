@@ -20,8 +20,5 @@
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.16.2" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:javadoc:1.16.2" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:sources:1.16.2" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:4.9-beta-1" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:sources:4.9-beta-1" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.jopt-simple:jopt-simple:javadoc:4.9-beta-1" level="project" />
   </component>
 </module>

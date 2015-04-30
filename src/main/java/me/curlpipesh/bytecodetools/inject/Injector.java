@@ -16,12 +16,13 @@ public abstract class Injector implements ClassFileTransformer {
     protected final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 
     @Override
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "unchecked"})
     public final byte[] transform(ClassLoader classLoader, String s, Class<?> aClass, ProtectionDomain protectionDomain, byte[] bytes) throws IllegalClassFormatException {
         if(getClass().getDeclaredAnnotation(Inject.class).value().equals(s)) {
-            System.out.println("> Starting injection...");
+            System.out.println("> Injecting " + getClass().getDeclaredAnnotation(Inject.class).value() + "...");
             ClassReader cr = new ClassReader(bytes);
             cr.accept(getVisitor(), 0);
+            System.out.println("> Done!");
             return cw.toByteArray();
         } else {
             throw new IllegalStateException("@Inject isn't present!?");
