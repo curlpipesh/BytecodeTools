@@ -13,6 +13,7 @@ import java.util.jar.JarFile;
  * @author audrey
  * @since 4/29/15
  */
+@SuppressWarnings("unused")
 public class ClassEnumerator {
     /**
      * Parses a directory for jar files and class files
@@ -123,23 +124,27 @@ public class ClassEnumerator {
     private static List<Class<?>> processDirectory(final File directory, final String append) {
         final List<Class<?>> classes = new ArrayList<>();
         final String[] files = directory.list();
-        for (final String fileName : files) {
-            String className = null;
-            if (fileName.endsWith(".class")) {
-                className = append + '.' + fileName.replace(".class", "");
-            }
-            if (className != null) {
-                try {
-                    classes.add(Class.forName(className.substring(1)));
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+        if(files != null) {
+            for (final String fileName : files) {
+                String className = null;
+                if (fileName.endsWith(".class")) {
+                    className = append + '.' + fileName.replace(".class", "");
                 }
-                continue;
+                if (className != null) {
+                    try {
+                        classes.add(Class.forName(className.substring(1)));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    continue;
+                }
+                final File subdir = new File(directory, fileName);
+                if (subdir.isDirectory()) {
+                    classes.addAll(processDirectory(subdir, append + "." + fileName));
+                }
             }
-            final File subdir = new File(directory, fileName);
-            if (subdir.isDirectory()) {
-                classes.addAll(processDirectory(subdir, append + "." + fileName));
-            }
+        } else {
+            System.err.println(">> Directory `" + directory.getAbsolutePath() + "` has null File#list()!?");
         }
         return classes;
     }

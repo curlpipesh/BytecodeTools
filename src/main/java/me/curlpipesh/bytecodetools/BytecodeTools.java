@@ -7,6 +7,7 @@ import java.io.File;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,13 +19,13 @@ import java.util.stream.Collectors;
 public class BytecodeTools {
     public static void premain(String agentArgs, Instrumentation inst) {
         String[] args = agentArgs.split(" ");
-        System.out.println("Loading transformers...");
+        log("Loading transformers...");
         List<Class<?>> transformers = Collections.synchronizedList(ClassEnumerator
                 .getClassesFromJar(new File(args[0]),
                         BytecodeTools.class.getClassLoader()).stream()
                 .filter(ClassFileTransformer.class::isAssignableFrom).collect(Collectors.toList()));
         if(transformers.size() == 0) {
-            System.err.println("No transformers found!");
+            log("No transformers found!");
             System.exit(1);
         }
         transformers.stream().filter(ClassFileTransformer.class::isAssignableFrom)
@@ -32,10 +33,14 @@ public class BytecodeTools {
                 .forEach(transformer -> {
                     try {
                         inst.addTransformer((ClassFileTransformer) transformer.getConstructor().newInstance());
-                        System.out.println("Added transformer: " + transformer.getName());
+                        log("Added transformer: " + transformer.getName());
                     } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 });
+    }
+
+    public static void log(String... messages) {
+        Arrays.stream(messages).forEach(m -> System.out.println("> " + m));
     }
 }

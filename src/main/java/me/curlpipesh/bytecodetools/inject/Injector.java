@@ -8,6 +8,8 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 
+import static me.curlpipesh.bytecodetools.BytecodeTools.log;
+
 /**
  * @author audrey
  * @since 4/29/15
@@ -17,14 +19,14 @@ public abstract class Injector implements ClassFileTransformer {
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     public final byte[] transform(ClassLoader classLoader, String s, Class<?> aClass, ProtectionDomain protectionDomain, byte[] bytes) throws IllegalClassFormatException {
         if(getClass().getDeclaredAnnotation(Inject.class).value().equals(s)) {
-            System.out.println("> Injecting " + getClass().getDeclaredAnnotation(Inject.class).value() + "...");
+            log("Injecting " + getClass().getDeclaredAnnotation(Inject.class).value() + "...");
             ClassReader cr = new ClassReader(bytes);
             ClassNode cn = new ClassNode();
             cr.accept(cn, 0);
             inject(cr, cn);
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
             cn.accept(cw);
-            System.out.println("> Done!");
+            log("Done!");
             return cw.toByteArray();
         } else {
             throw new IllegalStateException("@Inject isn't present!?");
