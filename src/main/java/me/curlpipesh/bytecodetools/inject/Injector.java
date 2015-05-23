@@ -24,7 +24,7 @@ public abstract class Injector implements ClassFileTransformer {
             ClassNode cn = new ClassNode();
             cr.accept(cn, 0);
             inject(cr, cn);
-            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             cn.accept(cw);
             log("Done!");
             return cw.toByteArray();
