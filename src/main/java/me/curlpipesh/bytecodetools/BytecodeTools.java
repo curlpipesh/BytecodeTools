@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
  */
 public class BytecodeTools {
     public static void premain(String agentArgs, Instrumentation inst) {
-        String[] args = agentArgs.split(" ");
+        String[] args = agentArgs.split(":");
+        String[] ignored = new String[args.length - 1];
+        System.arraycopy(args, 1, ignored, 0, ignored.length);
         List<Class<?>> allClasses = Collections.synchronizedList(ClassEnumerator
                 .getClassesFromJar(new File(args[0]),
                         BytecodeTools.class.getClassLoader()));
