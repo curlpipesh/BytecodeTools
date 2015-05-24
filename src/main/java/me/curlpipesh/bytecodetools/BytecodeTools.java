@@ -1,8 +1,7 @@
 package me.curlpipesh.bytecodetools;
 
-import me.curlpipesh.bytecodetools.define.Predefiner;
-import me.curlpipesh.bytecodetools.inject.Inject;
 import me.curlpipesh.bytecodetools.define.Redefiner;
+import me.curlpipesh.bytecodetools.inject.Inject;
 import me.curlpipesh.bytecodetools.util.ClassEnumerator;
 
 import java.io.File;
@@ -29,25 +28,6 @@ public class BytecodeTools {
         List<Class<?>> allClasses = Collections.synchronizedList(ClassEnumerator
                 .getClassesFromJar(new File(args[0]),
                         BytecodeTools.class.getClassLoader()));
-
-        log("Loading predefiners...");
-        List<Class<?>> predefiners = allClasses.stream()
-                .filter(Predefiner.class::isAssignableFrom)
-                .filter(c -> !c.equals(Predefiner.class))
-                .collect(Collectors.toList());
-        predefiners.forEach(p -> {
-            try {
-                Predefiner pre = (Predefiner) p.getConstructor().newInstance();
-                defineClass(pre.predefine(), pre.name());
-                log("Predefined class: " + pre.name());
-            } catch(InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
-        allClasses = Collections.synchronizedList(ClassEnumerator
-                .getClassesFromJar(new File(args[0]),
-                        BytecodeTools.class.getClassLoader()));
-
         log("Loading transformers...");
         List<Class<?>> transformers = allClasses.stream()
                 .filter(ClassFileTransformer.class::isAssignableFrom).collect(Collectors.toList());
