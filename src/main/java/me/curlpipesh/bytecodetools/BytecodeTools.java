@@ -27,6 +27,7 @@ public class BytecodeTools {
         String[] args = agentArgs.split(":");
         String[] ignored = new String[args.length - 1];
         System.arraycopy(args, 1, ignored, 0, ignored.length);
+        ClassEnumerator.addFilters(ignored);
         List<Class<?>> allClasses = Collections.synchronizedList(ClassEnumerator
                 .getClassesFromJar(new File(args[0]),
                         BytecodeTools.class.getClassLoader()));
