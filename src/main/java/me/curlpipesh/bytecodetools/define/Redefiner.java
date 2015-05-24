@@ -1,4 +1,4 @@
-package me.curlpipesh.bytecodetools.redefine;
+package me.curlpipesh.bytecodetools.define;
 
 import java.lang.instrument.ClassDefinition;
 
