@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -16,8 +15,6 @@ import java.util.jar.JarFile;
  */
 @SuppressWarnings("unused")
 public class ClassEnumerator {
-    private static final List<String> filter = new ArrayList<>();
-
     /**
      * Parses a directory for jar files and class files
      * <p>
@@ -134,13 +131,9 @@ public class ClassEnumerator {
                     className = append + '.' + fileName.replace(".class", "");
                 }
                 if (className != null) {
-                    final String cpy = className;
-                    if(filter.stream().filter(n -> cpy.toLowerCase().contains(n.toLowerCase())).count() > 0) {
-                        continue;
-                    }
                     try {
                         classes.add(Class.forName(className.substring(1)));
-                    } catch (ClassNotFoundException e) {
+                    } catch(ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                     continue;
@@ -154,9 +147,5 @@ public class ClassEnumerator {
             System.err.println(">> Directory `" + directory.getAbsolutePath() + "` has null File#list()!?");
         }
         return classes;
-    }
-
-    public static void addFilters(String[] f) {
-        Collections.addAll(filter, f);
     }
 }
