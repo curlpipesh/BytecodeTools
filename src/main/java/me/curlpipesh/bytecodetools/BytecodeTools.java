@@ -69,12 +69,12 @@ public class BytecodeTools {
         Arrays.stream(messages).forEach(m -> System.out.println("> " + m));
     }
 
-    public static void defineClass(byte[] clazz, String fullName) {
+    public static void defineClass(ClassLoader cl, byte[] clazz, String fullName) {
         Method define;
         try {
             define = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
             define.setAccessible(true);
-            define.invoke(BytecodeTools.class.getClassLoader(), fullName, clazz, 0, clazz.length);
+            define.invoke(cl, fullName, clazz, 0, clazz.length);
         } catch(NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
